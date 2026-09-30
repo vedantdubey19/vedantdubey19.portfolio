@@ -22,7 +22,15 @@ It is filled in from the résumé and the public GitHub profile.
 
 ## Deploying
 
-Built for Vercel: import the repo, keep the defaults (build `npm run build`, output `dist`).
+Hosted on GitHub Pages: `.github/workflows/deploy.yml` builds and publishes on every push
+to `main`. The repo is named `vedantdubey19.github.io` so the site is served from the root.
+
+To use a custom domain (e.g. `vedantdubey.in`): add it under the repo's Settings → Pages →
+Custom domain, create the DNS records GitHub lists there at your registrar, tick Enforce
+HTTPS, then set `VITE_SITE_URL` in `.env` to the new address and push.
+
+It also deploys on Vercel as is (import the repo, keep the defaults), where `vercel.json`
+adds the security headers GitHub Pages cannot send.
 
 - `.env` holds `VITE_SITE_URL`, the public address used for the canonical URL, share image,
   `robots.txt` and `sitemap.xml`. Change it if the site lives at a different address.

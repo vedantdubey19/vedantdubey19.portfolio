@@ -58,6 +58,13 @@ if (script && !script[0].includes('fetchpriority')) {
   console.warn('prerender: module script not found, leaving its priority alone')
 }
 
+// GitHub Pages cannot send response headers, so the security policy travels in the page.
+// Only in the build: the dev server needs inline scripts for hot reload. frame-ancestors
+// cannot be set from a <meta> tag; vercel.json still sends it (and the rest) as headers.
+const csp =
+  "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
+html = html.replace('<meta charset="UTF-8" />', `<meta charset="UTF-8" />\n    <meta http-equiv="Content-Security-Policy" content="${csp}" />`)
+
 writeFileSync('dist/index.html', html)
 
 if (siteUrl) {
