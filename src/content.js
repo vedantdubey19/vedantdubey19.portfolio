@@ -8,6 +8,8 @@ import photo from './assets/me.webp'
 import studyaiShot from './assets/studyai.webp'
 
 const github = 'https://github.com/vedantdubey19'
+// Files in public/ live under the deploy path (see vite.config.js)
+const file = (name) => `${import.meta.env.BASE_URL}${name}`
 
 export const profile = {
   name: 'Vedant Dubey',
@@ -18,7 +20,7 @@ export const profile = {
   intro:
     'B.Tech CSE (Data Science), class of 2027. AI/ML intern at Axlero and IBM, Oracle-certified in Generative AI.',
   email: 'vedantdubey020@gmail.com',
-  resumeUrl: '/Vedant-Dubey-Resume.pdf', // file in public/
+  resumeUrl: file('Vedant-Dubey-Resume.pdf'), // file in public/
   photo, // src/assets/me.webp, the hero background. Set to '' to hide it.
   photoMobile, // smaller copy of the same photo, served to phones
   location: 'Noida, India',
@@ -228,25 +230,25 @@ export const experience = {
     {
       title: 'Amazon Bedrock Customization, Optimization & Automation',
       meta: 'AWS via Coursera · Jun 2026',
-      image: '/certificates/amazon-bedrock.webp',
+      image: file('certificates/amazon-bedrock.webp'),
       verify: 'https://coursera.org/verify/H0ME8BUF5OQZ',
     },
     {
       title: 'Generative AI Applications with RAG & LangChain',
       meta: 'IBM via Coursera · Jun 2026',
-      image: '/certificates/genai-rag.webp',
+      image: file('certificates/genai-rag.webp'),
       verify: 'https://coursera.org/verify/JBGKV17BK3X5',
     },
     {
       title: 'AI Virtual Internship (PBEL)',
       meta: 'IBM Developer Skills Network · Oct 2025',
-      image: '/certificates/ibm-internship.webp',
+      image: file('certificates/ibm-internship.webp'),
       verify: 'https://courses.ibmmooc.skillsnetwork.site/certificates/6926ba93a7f142769b67e9884835c257',
     },
     {
       title: 'Introduction to Generative AI Studio',
       meta: 'Google Cloud via Simplilearn · Dec 2025',
-      image: '/certificates/google-cloud.webp',
+      image: file('certificates/google-cloud.webp'),
       verify: 'https://simpli-web.app.link/e/de2skpRjeZb',
     },
   ],

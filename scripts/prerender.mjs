@@ -7,6 +7,8 @@ import { loadEnv } from 'vite'
 
 const { render } = await import('../dist-ssr/entry-server.js')
 const siteUrl = (loadEnv('production', process.cwd()).VITE_SITE_URL || '').replace(/\/$/, '')
+// The path everything is served under, matching `base` in vite.config.js
+const base = siteUrl ? new URL(siteUrl).pathname.replace(/\/?$/, '/') : '/'
 
 let html = readFileSync('dist/index.html', 'utf8')
 if (!html.includes('<!--app-html-->')) throw new Error('prerender: placeholder not found in dist/index.html')
@@ -15,14 +17,14 @@ html = html.replace('<!--app-html-->', render())
 // Preload the one font file the page needs so text does not reflow after load.
 const font = readdirSync('dist/assets').find((file) => /^plus-jakarta-sans-.*\.woff2$/.test(file))
 if (font) {
-  html = html.replace('</head>', `  <link rel="preload" as="font" type="font/woff2" href="/assets/${font}" crossorigin />\n  </head>`)
+  html = html.replace('</head>', `  <link rel="preload" as="font" type="font/woff2" href="${base}assets/${font}" crossorigin />\n  </head>`)
 }
 
 // Preload the hero photo the viewport will actually use, at default priority: the largest
 // paint is a line of text, so the font must not queue behind the photo. The filenames are hashed at build
 // time, so read them back out of the rendered markup rather than hard-coding them.
 const mobilePhoto = html.match(/<source[^>]*srcset="([^"]+)"/i)?.[1]
-const desktopPhoto = html.match(/<img[^>]*src="(\/assets\/me-[^"]+)"/i)?.[1]
+const desktopPhoto = html.match(/<img[^>]*src="([^"]*\/assets\/me-[^"]+)"/i)?.[1]
 if (mobilePhoto && desktopPhoto) {
   html = html.replace(
     '</head>',
@@ -35,7 +37,7 @@ if (mobilePhoto && desktopPhoto) {
 
 // Inline the stylesheet. It is ~7 kB, and fetching it as a separate file costs a whole
 // network round trip before the browser can paint anything (~150 ms on a slow connection).
-const styleLink = html.match(/<link rel="stylesheet"[^>]*href="(\/assets\/[^"]+\.css)"[^>]*>/)
+const styleLink = html.match(/<link rel="stylesheet"[^>]*href="[^"]*(\/assets\/[^"]+\.css)"[^>]*>/)
 if (styleLink) {
   const cssPath = join('dist', styleLink[1])
   const css = readFileSync(cssPath, 'utf8')
