@@ -1,0 +1,136 @@
+@import 'tailwindcss';
+
+/* Plus Jakarta Sans, subset to the characters this site uses and to the 400-800 weight
+   range (see README). 17 kB instead of 27 kB, which is what the largest text paint waits on. */
+@font-face {
+  font-family: 'Plus Jakarta Sans Variable';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('./assets/plus-jakarta-sans.woff2') format('woff2');
+}
+
+@theme {
+  /* Fixed brand colours, the same in both themes */
+  --color-accent: #ff5e00;
+  --color-accent-soft: #ff8640;
+  --color-ink: #0d0d0d;
+  --color-coal: #1f1f1f;
+
+  /* Theme colours: light values here, dark values in the media query below */
+  --color-page: #ffffff;
+  --color-soft: #f2f2f2;
+  --color-fg: #0d0d0d;
+  --color-muted: #6b6b6b;
+  --color-contrast: #0d0d0d;
+  --color-on-contrast: #ffffff;
+
+  --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --animate-marquee: marquee 32s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+/* Follows the browser / OS theme and switches live when it changes */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-page: #161616;
+    --color-soft: #222222;
+    --color-fg: #f2f2f2;
+    --color-muted: #a3a3a3;
+    --color-contrast: #f2f2f2;
+    --color-on-contrast: #0d0d0d;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem; /* keeps anchor targets clear of the fixed header */
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Scroll-in animation, toggled by <Reveal> */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero focus reveal, driven by useFocusFollow in Hero.jsx. Only on devices with a mouse;
+   elsewhere the sharp layer is hidden and the base photo is shown unblurred. */
+.hero-focus {
+  --fx: 52%;
+  --fy: 20%;
+  --fr: clamp(200px, 22vw, 340px);
+}
+
+.hero-focus-sharp {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-focus-blur {
+    filter: blur(12px) brightness(0.65) contrast(1.25) grayscale(1);
+  }
+
+  .hero-focus-sharp {
+    display: block;
+    mask-image: radial-gradient(circle var(--fr) at var(--fx) var(--fy), #000 30%, transparent 100%);
+  }
+}
+
+/* Without JavaScript nothing would reveal the content, so show it outright */
+@media (scripting: none) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .animate-marquee {
+    animation: none;
+  }
+}
