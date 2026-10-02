@@ -23,8 +23,8 @@ It is filled in from the résumé and the public GitHub profile.
 ## Deploying
 
 Hosted on GitHub Pages: `.github/workflows/deploy.yml` builds and publishes on every push
-to `main`. The repo is `vedantdubey19.portfolio`, so Pages serves it from
-`/vedantdubey19.portfolio/`; that path comes from `VITE_SITE_URL` in `.env`.
+to `main`. The repo is `vedantdubey19.github.io`, so Pages serves it from the root,
+https://vedantdubey19.github.io/; that address comes from `VITE_SITE_URL` in `.env`.
 
 To use a custom domain (e.g. `vedantdubey.in`): add it under the repo's Settings → Pages →
 Custom domain, create the DNS records GitHub lists there at your registrar, tick Enforce
